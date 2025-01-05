@@ -9,46 +9,38 @@ Base = declarative_base()
 
 class Users_list (Base):
     __tablename__='users-list'
-    user_id = Column(Integer, ForeignKey(''))
-    user_name = Column(String, ForeignKey(''))
-    user_active = Column(String, nulleable=False)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user_name = Column(String, ForeignKey('user.name'))
+    user_active = Column(String, ForeignKey('user.active'))
 
 class User (Base):
     __tablename__='user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(32), nulleable=False)
+    name = Column(String(32))
     first_name = Column(String(32))
     last_name = Column(String(32))
-    email = Column(String(32), nulleable=False)
-    password = Column(String, nulleable=False)
+    email = Column(String(32))
+    password = Column(String)
     creation = Column(Integer)
     fav_list = Column(String)
-    active = Column(String, nulleable=False)
+    active = Column(String)
+    user = relationship(Users_list)
 
 class Fav_list (Base):
     __tablename__='fav-list'
-    user_id = Column(Integer)
-    item_id = Column(Integer)
-    item_name = Column(String)
-    item_type = Column(String)
-    item_description = Column(String)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    item_id = Column(Integer, ForeignKey('items.id'))
+    user = relationship(User)
 
-class Planets(Base):
-    __tablename__='planets'
+class Items(Base):
+    __tablename__='items'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     type = Column(String)
     description = Column(String)
-
-class Characters(Base):
-    __tablename__='planets'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    type = Column(String)
-    description = Column(String)
-
-
-
+    user = relationship(Fav_list)
 
     def to_dict(self):
         return {}
